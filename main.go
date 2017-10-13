@@ -33,16 +33,25 @@ type Ingredient struct {
 	Weight float64 `json:weight`
 }
 
+var (
+	queryParam string
+)
+
+func init() {
+	flag.StringVar(&queryParam, "queryParam", "chicken", "High-level query param you are looking for.")
+}
+
 func main() {
 	viper.AutomaticEnv()
 	app_id := viper.Get("edamam_app_id").(string)
 	app_key := viper.Get("edamam_app_key").(string)
-	queryParam := flag.String("queryParam", "chicken", "High-level query param you are looking for.")
+
 	flag.Parse()
+
 	values := url.Values{
 		"app_id":  {app_id},
 		"app_key": {app_key},
-		"q":       {*queryParam},
+		"q":       {queryParam},
 		"from":    {"0"},
 		"to":      {"1"},
 	}
