@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
+	"net/url"
 
 	"github.com/spf13/viper"
 )
@@ -35,19 +35,23 @@ type Ingredient struct {
 
 func main() {
 	viper.AutomaticEnv()
-	app_id := viper.Get("edamam_app_id")
-	app_key := viper.Get("edamam_app_key")
-	url := "https://api.edamam.com/search"
-
+	app_id := viper.Get("edamam_app_id").(string)
+	app_key := viper.Get("edamam_app_key").(string)
 	queryParam := flag.String("queryParam", "chicken", "High-level query param you are looking for.")
-
 	flag.Parse()
+	values := url.Values{
+		"app_id":  {app_id},
+		"app_key": {app_key},
+		"q":       {*queryParam},
+		"from":    {"0"},
+		"to":      {"1"},
+	}
 
-	queryString := fmt.Sprintf("%v?q=%v&app_id=%v&app_key=%v&from=0&to=1", url, *queryParam, app_id, app_key)
-	res, _ := http.Get(queryString)
+	u, _ := url.Parse("https://api.edamam.com/search")
+	u.RawQuery = values.Encode()
+	res, _ := http.Get(u.String())
 	body, _ := ioutil.ReadAll(res.Body)
 	var r = new(Response)
 	json.Unmarshal([]byte(body), &r)
 	fmt.Println(r)
-	os.Exit(1)
 }
