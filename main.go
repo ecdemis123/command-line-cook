@@ -19,15 +19,16 @@ type Hit struct {
 }
 
 type Recipe struct {
-	Yield       int          `json:yield`
+	Yield       float64      `json:yield`
 	Label       string       `json:label`
 	Calories    float64      `json:calories`
+	Url         string       `json:url`
 	Ingredients []Ingredient `json:ingredients`
 }
 
 type Ingredient struct {
-	Text   string `json:text`
-	Weight string `json:weight`
+	Text   string  `json:text`
+	Weight float64 `json:weight`
 }
 
 func main() {
