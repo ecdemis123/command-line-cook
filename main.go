@@ -1,40 +1,17 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
-	"net/http"
+	"log"
 	"net/url"
 
 	"github.com/spf13/viper"
 )
 
-type Response struct {
-	Q    string `json:q`
-	Hits []Hit  `json:hits`
-}
-
-type Hit struct {
-	Recipe Recipe `json:recipe`
-}
-
-type Recipe struct {
-	Yield       float64      `json:yield`
-	Label       string       `json:label`
-	Calories    float64      `json:calories`
-	Url         string       `json:url`
-	Ingredients []Ingredient `json:ingredients`
-}
-
-type Ingredient struct {
-	Text   string  `json:text`
-	Weight float64 `json:weight`
-}
-
 var (
-	queryParam string
+	queryParam  string
+	queryString string
 )
 
 func init() {
@@ -56,11 +33,15 @@ func main() {
 		"to":      {"1"},
 	}
 
-	u, _ := url.Parse("https://api.edamam.com/search")
+	u, err := url.Parse("https://api.edamam.com/search")
+
+	if err != nil {
+		log.Fatalf("Error parsing url: %s\n", err)
+	}
+
 	u.RawQuery = values.Encode()
-	res, _ := http.Get(u.String())
-	body, _ := ioutil.ReadAll(res.Body)
-	var r = new(Response)
-	json.Unmarshal([]byte(body), &r)
+	queryString := u.String()
+
+	r := getRecipe(queryString)
 	fmt.Println(r)
 }
