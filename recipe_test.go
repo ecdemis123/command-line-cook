@@ -10,6 +10,22 @@ import (
 
 var res = &Response{
 	Q: "chicken",
+	Hits: []Hit{
+		Hit{
+			Recipe{
+				Yield:    6,
+				Label:    "healthy",
+				Calories: 1300,
+				Url:      "chicken_recipe.com",
+				Ingredients: []Ingredient{
+					Ingredient{
+						Text:   "4 c chicken",
+						Weight: 40,
+					},
+				},
+			},
+		},
+	},
 }
 
 func TestGetRecipe(t *testing.T) {
