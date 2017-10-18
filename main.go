@@ -47,6 +47,8 @@ func main() {
 	queryString := u.String()
 
 	r, err := getRecipe(queryString)
-	fmt.Println(err)
+	if err != nil {
+		log.Fatalf("Error getting recipe data: %s\n", err)
+	}
 	fmt.Println(r)
 }
