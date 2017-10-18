@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
+
+	multierror "github.com/hashicorp/go-multierror"
 )
 
 type Response struct {
@@ -29,12 +30,14 @@ type Ingredient struct {
 	Weight float64 `json:weight`
 }
 
-func getRecipe(queryString string) Response {
+var errorResult error
+
+func getRecipe(queryString string) (response Response, err error) {
 
 	res, err := http.Get(queryString)
 
 	if err != nil {
-		log.Fatalf("Error retrieving data: %s\n", err)
+		multierror.Append(errorResult, err)
 	}
 
 	defer res.Body.Close()
@@ -42,11 +45,12 @@ func getRecipe(queryString string) Response {
 	body, err := ioutil.ReadAll(res.Body)
 
 	if err != nil {
-		log.Fatalf("Error retrieving data: %s\n", err)
+		multierror.Append(errorResult, err)
 	}
 
 	var r Response
+
 	json.Unmarshal([]byte(body), &r)
 
-	return r
+	return r, errorResult
 }

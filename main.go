@@ -23,6 +23,10 @@ func main() {
 	app_id := viper.Get("edamam_app_id").(string)
 	app_key := viper.Get("edamam_app_key").(string)
 
+	flag.Usage = func() {
+		flag.PrintDefaults()
+	}
+
 	flag.Parse()
 
 	values := url.Values{
@@ -42,6 +46,7 @@ func main() {
 	u.RawQuery = values.Encode()
 	queryString := u.String()
 
-	r := getRecipe(queryString)
+	r, err := getRecipe(queryString)
+	fmt.Println(err)
 	fmt.Println(r)
 }

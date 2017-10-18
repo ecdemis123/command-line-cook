@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,6 +36,8 @@ func TestGetRecipe(t *testing.T) {
 				w.Write([]byte(res2B))
 			}))
 
-	res := getRecipe(edamamStub.URL)
-	fmt.Println(res)
+	_, err := getRecipe(edamamStub.URL)
+	if err != nil {
+		t.Errorf("Error getting and parsing API data")
+	}
 }
