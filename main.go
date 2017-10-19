@@ -4,18 +4,18 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math"
 	"net/url"
 
 	"github.com/spf13/viper"
 )
 
 var (
-	queryParam  string
-	queryString string
+	search string
 )
 
 func init() {
-	flag.StringVar(&queryParam, "queryParam", "chicken", "High-level query param you are looking for.")
+	flag.StringVar(&search, "search", "chicken", "High-level query param you are looking for.")
 }
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	values := url.Values{
 		"app_id":  {app_id},
 		"app_key": {app_key},
-		"q":       {queryParam},
+		"q":       {search},
 		"from":    {"0"},
 		"to":      {"1"},
 	}
@@ -50,5 +50,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting recipe data: %s\n", err)
 	}
-	fmt.Println(r)
+	recipe := r.Hits[0].Recipe
+	calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
+	fmt.Println("Name:", recipe.Label)
+	fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
+	fmt.Println("Ingredients:")
+	for _, ingredient := range recipe.Ingredients {
+		fmt.Println("*", ingredient.Text)
+	}
+	fmt.Println("Instructions:")
+	fmt.Println(recipe.Url)
 }
