@@ -2,11 +2,10 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"log"
-	"math"
 	"math/rand"
 	"net/url"
+	"strconv"
 	"time"
 
 	"github.com/spf13/viper"
@@ -24,6 +23,7 @@ func main() {
 	viper.AutomaticEnv()
 	app_id := viper.Get("edamam_app_id").(string)
 	app_key := viper.Get("edamam_app_key").(string)
+	recipeCount := 100
 
 	flag.Usage = func() {
 		flag.PrintDefaults()
@@ -36,7 +36,7 @@ func main() {
 		"app_key": {app_key},
 		"q":       {search},
 		"from":    {"0"},
-		"to":      {"100"},
+		"to":      {strconv.Itoa(recipeCount)},
 	}
 
 	u, err := url.Parse("https://api.edamam.com/search")
@@ -53,20 +53,10 @@ func main() {
 		log.Fatalf("Error getting recipe data: %s\n", err)
 	}
 
-	// api does not return a random result
 	seed := rand.NewSource(time.Now().UnixNano())
 	rn := rand.New(seed)
-	randomIndex := rn.Intn(100)
-
+	randomIndex := rn.Intn(recipeCount)
 	recipe := r.Hits[randomIndex].Recipe
-	calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
-	fmt.Println("Name:", recipe.Label)
-	fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
-	fmt.Println("Ingredients:")
-	for _, ingredient := range recipe.Ingredients {
-		fmt.Println("*", ingredient.Text)
-	}
-	fmt.Println("Instructions:")
-	fmt.Println(recipe.Url)
-	fmt.Println("--------")
+
+	printRecipe(recipe)
 }
