@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"math"
 	"net/http"
-
-	multierror "github.com/hashicorp/go-multierror"
 )
 
 type Response struct {
@@ -36,25 +34,26 @@ var errorResult error
 
 func getRecipe(queryString string) (response Response, err error) {
 
-	res, err := http.Get(queryString)
+	var r Response
 
+	res, err := http.Get(queryString)
 	if err != nil {
-		multierror.Append(errorResult, err)
+		return r, err
 	}
 
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
-
 	if err != nil {
-		multierror.Append(errorResult, err)
+		return r, err
 	}
 
-	var r Response
+	err2 := json.Unmarshal([]byte(body), &r)
+	if err != nil {
+		return r, err2
+	}
 
-	json.Unmarshal([]byte(body), &r)
-
-	return r, errorResult
+	return r, err
 }
 
 func printRecipe(recipe Recipe) {
@@ -68,5 +67,4 @@ func printRecipe(recipe Recipe) {
 	fmt.Println("Instructions:")
 	fmt.Println(recipe.Url)
 	fmt.Println("--------")
-
 }

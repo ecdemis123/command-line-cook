@@ -39,11 +39,7 @@ func main() {
 		"to":      {strconv.Itoa(recipeCount)},
 	}
 
-	u, err := url.Parse("https://api.edamam.com/search")
-
-	if err != nil {
-		log.Fatalf("Error parsing url: %s\n", err)
-	}
+	u, _ := url.Parse("https://api.edamam.com/search")
 
 	u.RawQuery = values.Encode()
 	queryString := u.String()
