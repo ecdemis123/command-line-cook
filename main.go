@@ -34,7 +34,7 @@ func main() {
 		"app_key": {app_key},
 		"q":       {search},
 		"from":    {"0"},
-		"to":      {"1"},
+		"to":      {"100"},
 	}
 
 	u, err := url.Parse("https://api.edamam.com/search")
@@ -50,14 +50,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error getting recipe data: %s\n", err)
 	}
-	recipe := r.Hits[0].Recipe
-	calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
-	fmt.Println("Name:", recipe.Label)
-	fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
-	fmt.Println("Ingredients:")
-	for _, ingredient := range recipe.Ingredients {
-		fmt.Println("*", ingredient.Text)
+
+	for i, _ := range r.Hits {
+		recipe := r.Hits[i].Recipe
+		calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
+		fmt.Println("Name:", recipe.Label)
+		fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
+		fmt.Println("Ingredients:")
+		for _, ingredient := range recipe.Ingredients {
+			fmt.Println("*", ingredient.Text)
+		}
+		fmt.Println("Instructions:")
+		fmt.Println(recipe.Url)
+		fmt.Println("--------")
 	}
-	fmt.Println("Instructions:")
-	fmt.Println(recipe.Url)
 }
