@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"math/rand"
 	"net/url"
+	"time"
 
 	"github.com/spf13/viper"
 )
@@ -51,17 +53,20 @@ func main() {
 		log.Fatalf("Error getting recipe data: %s\n", err)
 	}
 
-	for i, _ := range r.Hits {
-		recipe := r.Hits[i].Recipe
-		calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
-		fmt.Println("Name:", recipe.Label)
-		fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
-		fmt.Println("Ingredients:")
-		for _, ingredient := range recipe.Ingredients {
-			fmt.Println("*", ingredient.Text)
-		}
-		fmt.Println("Instructions:")
-		fmt.Println(recipe.Url)
-		fmt.Println("--------")
+	// api does not return a random result
+	seed := rand.NewSource(time.Now().UnixNano())
+	rn := rand.New(seed)
+	randomIndex := rn.Intn(100)
+
+	recipe := r.Hits[randomIndex].Recipe
+	calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
+	fmt.Println("Name:", recipe.Label)
+	fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
+	fmt.Println("Ingredients:")
+	for _, ingredient := range recipe.Ingredients {
+		fmt.Println("*", ingredient.Text)
 	}
+	fmt.Println("Instructions:")
+	fmt.Println(recipe.Url)
+	fmt.Println("--------")
 }
