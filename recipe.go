@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"math"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type Response struct {
@@ -38,19 +40,19 @@ func getRecipe(queryString string) (response Response, err error) {
 
 	res, err := http.Get(queryString)
 	if err != nil {
-		return r, err
+		return r, errors.Wrap(err, "error performing HTTP request")
 	}
 
 	defer res.Body.Close()
 
 	body, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		return r, err
+		return r, errors.Wrap(err, "error reading response body")
 	}
 
-	err2 := json.Unmarshal([]byte(body), &r)
+	err = json.Unmarshal([]byte(body), &r)
 	if err != nil {
-		return r, err2
+		return r, errors.Wrap(err, "error unmarshaling response")
 	}
 
 	return r, err
