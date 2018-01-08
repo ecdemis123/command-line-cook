@@ -1,19 +1,22 @@
 package main
 
 import (
-	"fmt"
+	"bytes"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
 func scrapeInstructions(url string) (instructions string, err error) {
+	var buffer bytes.Buffer
+
 	doc, err := goquery.NewDocument(url)
+
 	if err != nil {
 		return instructions, err
 	}
 	doc.Find(".instruction").Each(func(_ int, s *goquery.Selection) {
 		text := s.Text()
-		fmt.Println(text)
+		buffer.WriteString(text)
 	})
-	return instructions, err
+	return buffer.String(), err
 }

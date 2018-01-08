@@ -60,7 +60,7 @@ func getRecipe(queryString string) (response Response, err error) {
 	return r, err
 }
 
-func printRecipe(recipe Recipe) {
+func printRecipe(recipe Recipe, instructions string) {
 	calories := int(recipe.Calories + math.Copysign(0.5, recipe.Calories))
 	fmt.Println("Name:", recipe.Label)
 	fmt.Println("Yield:", recipe.Yield, "Calories:", calories)
@@ -69,6 +69,7 @@ func printRecipe(recipe Recipe) {
 		fmt.Println("*", ingredient.Text)
 	}
 	fmt.Println("Instructions:")
+	fmt.Println(instructions)
 	fmt.Println(recipe.URL)
 	fmt.Println("--------")
 }

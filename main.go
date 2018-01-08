@@ -54,5 +54,10 @@ func main() {
 	randomIndex := rn.Intn(recipeCount)
 	recipe := r.Hits[randomIndex].Recipe
 
-	printRecipe(recipe)
+	instructions, err := scrapeInstructions(recipe.URL)
+	if err != nil {
+		log.Fatalf("Error getting instructions data %s\n", err)
+	}
+
+	printRecipe(recipe, instructions)
 }

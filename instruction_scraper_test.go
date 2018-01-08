@@ -4,5 +4,8 @@ import "testing"
 
 func TestScrapeInstructions(t *testing.T) {
 	URL := "http://www.saveur.com/classic-chicken-marsala-recipe"
-	scrapeInstructions(URL)
+	_, err := scrapeInstructions(URL)
+	if err != nil {
+		t.Errorf("error retrieving instructions")
+	}
 }
