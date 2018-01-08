@@ -14,7 +14,7 @@ func scrapeInstructions(url string) (instructions string, err error) {
 	if err != nil {
 		return instructions, err
 	}
-	doc.Find(".instruction").Each(func(_ int, s *goquery.Selection) {
+	doc.Find(".instruction .instructions").Each(func(_ int, s *goquery.Selection) {
 		text := s.Text()
 		buffer.WriteString(text)
 	})
