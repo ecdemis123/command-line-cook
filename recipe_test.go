@@ -15,7 +15,7 @@ var res = &Response{
 				Yield:    6,
 				Label:    "healthy",
 				Calories: 1300,
-				Url:      "chicken_recipe.com",
+				URL:      "chicken_recipe.com",
 				Ingredients: []Ingredient{
 					Ingredient{
 						Text:   "4 c chicken",

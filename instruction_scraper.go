@@ -27,6 +27,7 @@ func scrapeInstructions(url string) (instructions string, err error) {
 			if t.Data != "ul" {
 				continue
 			}
+
 		}
 	}
 }

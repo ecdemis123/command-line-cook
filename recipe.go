@@ -10,26 +10,30 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Response is the main data from edamamAPI
 type Response struct {
-	Q    string `json:q`
-	Hits []Hit  `json:hits`
+	Q    string `json:"q"`
+	Hits []Hit  `json:"hits"`
 }
 
+// Hit is the sub response from edamamAPI
 type Hit struct {
-	Recipe Recipe `json:recipe`
+	Recipe Recipe `json:"recipe"`
 }
 
+// Recipe is the indiviual recipe
 type Recipe struct {
-	Yield       float64      `json:yield`
-	Label       string       `json:label`
-	Calories    float64      `json:calories`
-	Url         string       `json:url`
-	Ingredients []Ingredient `json:ingredients`
+	Yield       float64      `json:"yield"`
+	Label       string       `json:"label"`
+	Calories    float64      `json:"calories"`
+	URL         string       `json:"url"`
+	Ingredients []Ingredient `json:"ingredients"`
 }
 
+// Ingredient is the individual ingredient
 type Ingredient struct {
-	Text   string  `json:text`
-	Weight float64 `json:weight`
+	Text   string  `json:"text"`
+	Weight float64 `json:"weight"`
 }
 
 var errorResult error
@@ -67,6 +71,6 @@ func printRecipe(recipe Recipe) {
 		fmt.Println("*", ingredient.Text)
 	}
 	fmt.Println("Instructions:")
-	fmt.Println(recipe.Url)
+	fmt.Println(recipe.URL)
 	fmt.Println("--------")
 }

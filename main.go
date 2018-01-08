@@ -21,8 +21,8 @@ func init() {
 
 func main() {
 	viper.AutomaticEnv()
-	app_id := viper.Get("edamam_app_id").(string)
-	app_key := viper.Get("edamam_app_key").(string)
+	appID := viper.Get("edamam_app_id").(string)
+	appKey := viper.Get("edamam_app_key").(string)
 	recipeCount := 100
 
 	flag.Usage = func() {
@@ -32,8 +32,8 @@ func main() {
 	flag.Parse()
 
 	values := url.Values{
-		"app_id":  {app_id},
-		"app_key": {app_key},
+		"app_id":  {appID},
+		"app_key": {appKey},
 		"q":       {search},
 		"from":    {"0"},
 		"to":      {strconv.Itoa(recipeCount)},
