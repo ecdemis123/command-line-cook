@@ -36,8 +36,6 @@ type Ingredient struct {
 	Weight float64 `json:weight`
 }
 
-var errorResult error
-
 func getRecipe(queryString string) (response Response, err error) {
 
 	var r Response

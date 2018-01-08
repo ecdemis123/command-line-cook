@@ -1,33 +1,19 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
 
-	"golang.org/x/net/html"
+	"github.com/PuerkitoBio/goquery"
 )
 
 func scrapeInstructions(url string) (instructions string, err error) {
-
-	res, err := http.Get(url)
+	doc, err := goquery.NewDocument(url)
 	if err != nil {
+		return instructions, err
 	}
-
-	b := res.Body
-	defer b.Close()
-
-	tokenizer := html.NewTokenizer(b)
-
-	for {
-		tt := tokenizer.Next()
-		switch {
-		case tt == html.ErrorToken:
-			return instructions, err
-		case tt == html.StartTagToken:
-			t := tokenizer.Token()
-			if t.Data != "ul" {
-				continue
-			}
-
-		}
-	}
+	doc.Find(".instruction").Each(func(_ int, s *goquery.Selection) {
+		text := s.Text()
+		fmt.Println(text)
+	})
+	return instructions, err
 }
